@@ -62,7 +62,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000",
             "https://syncspace-sakshi1204-pngs-projects.vercel.app",
-            "https://syncspace-4d71d9l3h-sakshi1204-pngs-projects.vercel.app"
+            "https://syncspace-4d71d9l3h-sakshi1204-pngs-projects.vercel.app",
+            "https://syncspace-app-fawn.vercel.app"
         ));
         config.setAllowedMethods(Arrays.asList(
             "GET","POST","PUT","PATCH","DELETE","OPTIONS"));
