@@ -1,0 +1,10 @@
+﻿.metadata
+.gradle
+build
+bin
+*.class
+*.jar
+node_modules
+.next
+.env
+.env.local
