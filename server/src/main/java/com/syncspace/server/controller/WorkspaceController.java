@@ -7,6 +7,7 @@ import com.syncspace.server.service.WorkspaceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +49,24 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<WorkspaceMember>> getMembers(
+    public ResponseEntity<List<Map<String, Object>>> getMembers(
             @PathVariable("id") Long id) {
-        return ResponseEntity.ok(memberRepository.findByWorkspace(
-            workspaceService.getWorkspace(id)));
+        List<WorkspaceMember> members = memberRepository.findByWorkspace(
+            workspaceService.getWorkspace(id));
+
+        List<Map<String, Object>> result = members.stream().map(m -> {
+            Map<String, Object> memberDto = new HashMap<>();
+            memberDto.put("id", m.getId());
+            memberDto.put("role", m.getRole());
+            Map<String, Object> userDto = new HashMap<>();
+            userDto.put("id", m.getUser().getId());
+            userDto.put("name", m.getUser().getName());
+            userDto.put("email", m.getUser().getEmail());
+            memberDto.put("user", userDto);
+            return memberDto;
+        }).toList();
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/{id}/invite")
