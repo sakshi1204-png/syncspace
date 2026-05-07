@@ -21,7 +21,8 @@ public class WorkspaceService {
         this.userRepository = userRepository;
     }
 
-    public Workspace createWorkspace(String name, String description, String ownerEmail) {
+    public Workspace createWorkspace(String name, String description,
+                                      String ownerEmail) {
         User owner = userRepository.findByEmail(ownerEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -45,7 +46,11 @@ public class WorkspaceService {
     public List<Workspace> getUserWorkspaces(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return workspaceRepository.findByOwner(user);
+
+        List<WorkspaceMember> memberships = memberRepository.findByUser(user);
+        return memberships.stream()
+                .map(WorkspaceMember::getWorkspace)
+                .toList();
     }
 
     public Workspace getWorkspace(Long id) {
