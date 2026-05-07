@@ -2,6 +2,7 @@ package com.syncspace.server.controller;
 
 import com.syncspace.server.model.Workspace;
 import com.syncspace.server.model.WorkspaceMember;
+import com.syncspace.server.repository.WorkspaceMemberRepository;
 import com.syncspace.server.service.WorkspaceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,12 @@ import java.util.Map;
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
+    private final WorkspaceMemberRepository memberRepository;
 
-    public WorkspaceController(WorkspaceService workspaceService) {
+    public WorkspaceController(WorkspaceService workspaceService,
+                               WorkspaceMemberRepository memberRepository) {
         this.workspaceService = workspaceService;
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping
@@ -41,6 +45,13 @@ public class WorkspaceController {
     public ResponseEntity<Workspace> getWorkspace(
             @PathVariable("id") Long id) {
         return ResponseEntity.ok(workspaceService.getWorkspace(id));
+    }
+
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<WorkspaceMember>> getMembers(
+            @PathVariable("id") Long id) {
+        return ResponseEntity.ok(memberRepository.findByWorkspace(
+            workspaceService.getWorkspace(id)));
     }
 
     @PostMapping("/{id}/invite")
